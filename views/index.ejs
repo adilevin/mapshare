@@ -1,11 +1,67 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>MapShare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+    <script>
+        var api_key = '<%= api_key %>';
+    </script>
+</head>
+
+<body>
+<div class="container">
+    <div class="row clearfix">
+		<div class="col-xs-12 column">
+			<div class="jumbotron">
+				<h1>
+					MapShare
+				</h1>
+			</div>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-xs-12 column">
+            <div class="form-group">
+                <label for="addressFreeTextInput">Please type your address:</label>
+                <input type="text" class="form-control" id="addressFreeTextInput">
+            </div>
+            <div class="form-group">
+			    <label for="reponseFromGoogle" id="resultsTitle">Please confirm your address:</label>
+                <select id="reponseFromGoogle" class="form-control">
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block btn-large" type="submit">Submit</button>
+            </div>
+		</div>
+	</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
+<script id="template" type="x-tmpl-mustache">
+    {{#results}}
+        <option>{{formatted_address}}</option>
+    {{/results}}
+</script>
+<script>
+  $(document).ready(function() {
+    $('#addressFreeTextInput').change(function() {
+      var address = encodeURI($('#addressFreeTextInput')[0].value);
+      $.ajax({
+        url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + api_key,
+        success: function(data) {
+            var template = $("#template").html();
+            var rendered = Mustache.render(template, data);
+            $("#reponseFromGoogle").html(rendered);
+        }});
+    });
+  });
+</script>
+</body>
 </html>
