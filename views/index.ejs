@@ -20,7 +20,7 @@
     <div class="row clearfix">
 		<div class="col-xs-12 column">
 			<div class="jumbotron">
-				<h1>
+				<h1 class="text-center">
 					MapShare
 				</h1>
 			</div>
@@ -38,7 +38,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-block btn-large" type="submit">Submit</button>
+                <button id="submitButton" class="btn btn-primary btn-block btn-large disabled" type="submit">Submit</button>
             </div>
 		</div>
 	</div>
@@ -58,6 +58,10 @@
         success: function(data) {
             var template = $("#template").html();
             var rendered = Mustache.render(template, data);
+            if (data.results.length==0)
+                $("#submitButton").addClass('disabled');
+            else
+                $("#submitButton").removeClass('disabled');
             $("#reponseFromGoogle").html(rendered);
         }});
     });
